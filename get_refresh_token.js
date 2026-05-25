@@ -6,7 +6,7 @@ const readline = require('readline');
 // 1. Reemplaza estos valores con los de tu App Registration en Azure
 // ==========================================
 const CLIENT_ID = "dd590625-bd57-487f-94c9-c8fb4c44ebfb"; 
-const TENANT_ID = "common"; // Para cuentas personales, usualmente usamos "common" o "consumers"
+const TENANT_ID = "common"; 
 
 const config = {
     auth: {
@@ -18,11 +18,16 @@ const config = {
 const pca = new msal.PublicClientApplication(config);
 
 const getTokenRequest = {
-    // Permisos necesarios para leer el Excel en tu OneDrive
-    scopes: ["Files.Read", "Files.Read.All", "offline_access"],
+    // Permisos necesarios para leer y escribir el Excel en tu OneDrive
+    scopes: ["Files.Read", "Files.Read.All", "Files.ReadWrite.All", "offline_access"],
     deviceCodeCallback: (response) => {
-        console.log("\n>>> INSTRUCCIÓN DE INICIO DE SESIÓN <<<");
-        console.log(response.message);
+        console.log("\n===============================================");
+        console.log(">>> PASO 1: ABRE TU NAVEGADOR EN ESTA URL <<<");
+        console.log("https://microsoft.com/devicelogin");
+        console.log("\n>>> PASO 2: INGRESA ESTE CÓDIGO EN LA WEB <<<");
+        console.log(`         ${response.userCode}`); 
+        console.log("===============================================\n");
+        console.log("(Este NO es el código de tu Authenticator, es el código para vincular esta terminal)");
     }
 };
 

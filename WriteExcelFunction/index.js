@@ -68,10 +68,17 @@ module.exports = async function (context, req) {
         // 4. Modificar los valores de la fila según los 'updates' mandados
         // updates = { "deben": "No", "observaciones": "Pagó" }
         for (const [key, value] of Object.entries(updates)) {
-            // "numero" fue mapeado a "Column1" en la lectura
-            let searchKey = key === "numero" ? "Column1" : key;
+            let colIndex = headers.indexOf(key);
             
-            let colIndex = headers.indexOf(searchKey);
+            // Si no encuentra la columna exacta, prueba mapeos comunes (compatibilidad con Excel viejo y nuevo)
+            if (colIndex === -1 && (key === "numero" || key === "Column1" || key === "Numero")) {
+                const fallbacks = ["numero", "Column1", "Numero"];
+                for (const fallback of fallbacks) {
+                    colIndex = headers.indexOf(fallback);
+                    if (colIndex !== -1) break;
+                }
+            }
+            
             if (colIndex !== -1) {
                 // If it's the vencimiento date, maybe convert it back or just write a string 
                 // Graph can accept a simple string 'yyyy-mm-dd' and usually parses it properly as a date if Excel is configured to

@@ -94,8 +94,11 @@ module.exports = async function (context, req) {
                 rowNumber: index + 2 // Excel rows are 1-indexed, headers are row 1, data starts at row 2
             };
             headers.forEach((headerName, headerIndex) => {
-                // Renombrar "Column1" a "numero"
-                let finalHeader = headerName === "Column1" ? "numero" : headerName;
+                // Renombrar "Column1" o variantes a "numero"
+                let finalHeader = headerName;
+                if (headerName === "Column1" || headerName === "Numero" || headerName === "numero") {
+                    finalHeader = "numero";
+                }
                 
                 let val = row[headerIndex];
                 
